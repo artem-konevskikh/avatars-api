@@ -1,0 +1,10 @@
+app:
+  name: "Avatars"
+  host: "0.0.0.0"
+  port: 8080
+  logLevel: "info"
+  logFile: "logs/app.log"
+avatar:
+  default: "default"
+ditto:
+csm:
