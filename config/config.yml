@@ -7,3 +7,25 @@ avatar:
   default: "default"
 ditto:
 csm:
+  # Model configuration
+  model_type: "CSM_1B"
+  device: "cuda"  # Will be overridden based on availability
+  local_model_path: "data/weights/csm"
+  audio_num_codebooks: 32
+  optimize_for_streaming: true
+
+  # Generation settings
+  temperature: 0.8
+  topk: 40
+  max_audio_length_ms: 90000
+
+  # Performance optimization
+  compile_model: true  # Will be overridden based on device
+  use_amp: true  # Will be overridden based on device
+  cache_size: 4096  # Will be overridden based on GPU memory
+
+  # Default speaker ID
+  default_speaker_id: 0
+
+  # Stream settings
+  stream_buffer_size: 30  # Will be overridden based on GPU memory
