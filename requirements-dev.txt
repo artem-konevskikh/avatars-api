@@ -1,10 +1,8 @@
 dependency-injector==4.46.0
 fastapi==0.115.12
+mypy==1.15.0
 omegaconf==2.3.0
+pre-commit==4.2.0
 pydantic==2.11.3
 uvicorn==0.34.2
-
-# dev
-mypy==1.15.0
-pre-commit==4.2.0
 wemake-python-styleguide==1.1.0

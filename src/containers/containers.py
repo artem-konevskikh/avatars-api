@@ -6,7 +6,7 @@ from src.services.ditto.ditto import Ditto
 
 class AppContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
-    text_to_voice = providers.Singleton(
+    tts = providers.Singleton(
         CSM,
         config=config.csm,
     )
