@@ -2,4 +2,5 @@ dependency-injector==4.46.0
 fastapi==0.115.12
 omegaconf==2.3.0
 pydantic==2.11.3
+python-multipart==0.0.20
 uvicorn==0.34.2

@@ -11,3 +11,8 @@ class Task(BaseModel):
     created_at: datetime
     video_url: Optional[str] = None
     error: Optional[str] = None
+
+
+class TaskCreate(BaseModel):
+    avatar_id: str
+    text: str

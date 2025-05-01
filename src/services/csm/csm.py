@@ -1,4 +1,4 @@
-from src.logger import logger
+from src.logger import LOGGER
 
 
 class CSM(object):
@@ -9,5 +9,5 @@ class CSM(object):
         return self._name
 
     def run(self, text: str) -> str:
-        logger.info(f"Running {self._name}: {text}")
+        LOGGER.info(f"Running {self._name}: {text}")
         return "dummy_voice.wav"

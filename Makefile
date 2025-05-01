@@ -26,7 +26,7 @@ get_models:
 
 # ================== RUN ==================
 run:
-	$(PYTHON) app.py
+	$(PYTHON) -m src.main
 
 # ================== CONTINUOUS INTEGRATION =================
 ci_static_code_analysis:

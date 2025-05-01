@@ -2,7 +2,7 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, UploadFile, File, Form
 
 from src.containers.containers import AppContainer
-from src.services.avatar_service import AvatarService
+from src.services.avatar import AvatarService
 from src.models.avatars import Avatar, AvatarList
 
 router = APIRouter(prefix="/api", tags=["avatars"])
