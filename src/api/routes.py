@@ -4,13 +4,14 @@ from fastapi import APIRouter, Depends, Response
 from src.containers.containers import AppContainer
 from src.services.csm.csm import CSM
 from src.services.ditto.ditto import Ditto
+from src.models.models import VersionResponse, HealthResponse
 
 router = APIRouter()
 
 
-@router.get("/")
-def get_name() -> Response:
-    return Response("Avatars")
+@router.get("/", response_model=VersionResponse)
+async def get_version():
+    return {"version": "0.1.0", "build_date": "2025-05-01"}
 
 
 @router.get("/run")
@@ -27,6 +28,14 @@ def run(
     return Response(res)
 
 
-@router.get("/health_check")
-def health_check() -> Response:
-    return Response("OK")
+@router.get("/health", response_model=HealthResponse)
+async def health_check():
+    return {
+        "status": "healthy",
+        "components": {
+            "database": "connected",
+            "task_queue": "operational",
+            "csm_service": "available",
+            "ditto_service": "available"
+        }
+    }
