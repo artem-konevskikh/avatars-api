@@ -8,6 +8,7 @@ class Avatar(BaseModel):
     name: str
     bio: str
     photo: str
+    voice: Optional[str] = None
     idle_video_url: Optional[str] = None
     created_at: datetime
 

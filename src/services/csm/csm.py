@@ -229,6 +229,15 @@ class CSM(object):
 
         warmup_model(warmup_func)
 
+    def load_audio(self, audio_path: str) -> torch.Tensor:
+        audio_tensor, sample_rate = torchaudio.load(audio_path)
+        audio_tensor = torchaudio.functional.resample(
+            audio_tensor.squeeze(0),
+            orig_freq=sample_rate,
+            new_freq=self._generator.sample_rate,
+        )
+        return audio_tensor
+
     def generate(
         self,
         text: str,

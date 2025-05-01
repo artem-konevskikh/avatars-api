@@ -21,6 +21,7 @@ class AppContainer(containers.DeclarativeContainer):
     )
     avatar_service = providers.Singleton(
         AvatarService,
+        config=config.avatars,
         db=db,
     )
     task_service = providers.Singleton(

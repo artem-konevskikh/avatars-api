@@ -3,7 +3,8 @@ app:
   version: "0.1.0"
   host: "0.0.0.0"
   port: 8080
-avatar:
+avatars:
+  avatars_path: "data/avatars"
   default: "default"
 ditto:
 csm:
