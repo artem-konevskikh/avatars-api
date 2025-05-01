@@ -1,19 +1,17 @@
 from datetime import datetime
-from typing import Dict
 import uuid
 import asyncio
 from fastapi import HTTPException, BackgroundTasks
 
-
 from src.models.tasks import Task
 from src.services.csm.csm import CSM
 from src.services.ditto.ditto import Ditto
+from src.db.database import Database
 
 
 class TaskService:
-    def __init__(self, tts: CSM, talking_head: Ditto):
-        # This would be a database in a real implementation
-        self.tasks_db: Dict[str, Task] = {}
+    def __init__(self, db: Database, tts: CSM, talking_head: Ditto):
+        self.db = db
         self.tts = tts
         self.talking_head = talking_head
 
@@ -35,21 +33,18 @@ class TaskService:
         )
 
         # Store task in database
-        self.tasks_db[task_id] = task
+        await self.db.create_task(task)
 
         # Start background processing
         background_tasks.add_task(
             self._process_avatar_generation, task_id, avatar_id, text
         )
 
-        return {"task_id": task_id, "status": "queued", "created_at": created_at}
+        return task
 
     async def get_task(self, task_id: str) -> Task:
         """Get task by ID."""
-        if task_id not in self.tasks_db:
-            raise HTTPException(status_code=404, detail="Task not found")
-
-        task = self.tasks_db[task_id]
+        task = await self.db.get_task(task_id)
 
         if task.status == "failed":
             raise HTTPException(status_code=500, detail=task.error)
@@ -58,21 +53,32 @@ class TaskService:
 
     async def _process_avatar_generation(self, task_id: str, avatar_id: str, text: str):
         """Process avatar generation (runs in background)."""
+        # Get task from database
+        task = await self.db.get_task(task_id)
         try:
-            # Update task to processing
-            self.tasks_db[task_id].status = "processing"
+            # Update task to processing status
+            task.status = "processing"
+            await self.db.update_task(task)
 
+            # Step 1: Generate audio using CSM (text-to-speech)
+            await self.db.update_task(task)
             audio_path = self.tts.run(text)
-            await asyncio.sleep(2)
-            _ = self.talking_head.run(audio_path)
-            await asyncio.sleep(3)
+            await asyncio.sleep(2)  # Simulate processing time
 
-            self.tasks_db[task_id].status = "completed"
-            self.tasks_db[task_id].video_url = (
-                f"https://example.com/videos/{avatar_id}/generated/{task_id}.mp4",
+            # Step 2: Generate video using Ditto (talking head)
+            await self.db.update_task(task)
+            _ = self.talking_head.run(audio_path)
+            await asyncio.sleep(3)  # Simulate processing time
+
+            # Update task as completed
+            task.status = "completed"
+            task.video_url = (
+                f"https://example.com/videos/{avatar_id}/generated/{task_id}.mp4"
             )
+            await self.db.update_task(task)
 
         except Exception as e:
             # Handle failure
-            self.tasks_db[task_id].status = "failed"
-            self.tasks_db[task_id].error = str(e)
+            task.status = "failed"
+            task.error = str(e)
+            await self.db.update_task(task)

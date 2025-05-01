@@ -9,6 +9,5 @@ class Task(BaseModel):
     text: str
     status: str
     created_at: datetime
-    progress: Optional[float] = None
     video_url: Optional[str] = None
     error: Optional[str] = None
