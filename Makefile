@@ -21,8 +21,14 @@ pre_commit_install:
 	@echo "=== Installing pre-commit ==="
 	$(PYTHON) -m pre_commit install
 
-get_models:
-	@echo "=== Downloading models ==="
+get_weights_csm:
+	@echo "=== Downloading CSM models ==="
+	huggingface-cli download unsloth/Llama-3.2-1B --local-dir data/weights/csm/Llama-3.2-1B
+	huggingface-cli download 'sesame/csm-1b' --local-dir data/weights/csm/csm-1b
+
+get_weights_ditto:
+	@echo "=== Downloading Ditto models ==="
+	huggingface-cli download digital-avatar/ditto-talkinghead --local-dir data/weights/ditto
 
 # ================== RUN ==================
 run:
