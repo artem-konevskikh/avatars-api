@@ -21,6 +21,7 @@ from src.logger import LOGGER
 @dataclass
 class Segment:
     """A segment of speech with text and audio data."""
+
     speaker: int
     text: str
     audio: Optional[torch.Tensor] = None
@@ -29,6 +30,7 @@ class Segment:
 
 class AudioFormat(Enum):
     """Supported audio output formats."""
+
     WAV = auto()
     PCM = auto()
     TENSOR = auto()
@@ -94,7 +96,7 @@ class AudioStreamProcessor:
         self.sample_rate = sample_rate
         self.audio_chunks: List[torch.Tensor] = []
         self.lock = threading.Lock()
-        self.queue: queue.Queue = queue.Queue()
+        self.queue: queue.Queue[torch.Tensor] = queue.Queue()
         self.running = True
 
         # Start background writer thread
@@ -191,7 +193,7 @@ def get_optimal_dtype() -> torch.dtype:
     return torch.float32
 
 
-def warmup_model(model_func: Callable, *args, **kwargs) -> None:
+def warmup_model(model_func: Callable[..., torch.Tensor], *args: object, **kwargs: object) -> None:  # type: ignore
     """
     Perform model warmup by executing one small inference pass.
 

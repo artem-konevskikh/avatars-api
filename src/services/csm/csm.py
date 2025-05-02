@@ -81,14 +81,11 @@ class CSM(object):
                 decoder_flavor="llama-100M",
                 text_vocab_size=128256,
                 audio_vocab_size=2051,
-                audio_num_codebooks=self.config["audio_num_codebooks"],
+                audio_num_codebooks=int(self.config["audio_num_codebooks"]),
             )
 
             # Determine if we're loading from local path
-            is_local = (
-                self.config["model_type"] == ModelType.CSM_LOCAL
-                and self.config["local_model_path"]
-            )
+            is_local = self.config["model_type"] == str(ModelType.CSM_LOCAL.name)
 
             # Load the model
             self._load_model(model_config, is_local)
@@ -160,7 +157,7 @@ class CSM(object):
 
         # Configure generator
         if self.config["optimize_for_streaming"]:
-            self._generator._stream_buffer_size = self.config["stream_buffer_size"]
+            self._generator._stream_buffer_size = int(self.config["stream_buffer_size"])
 
     def _apply_optimizations(self) -> None:
         """Apply performance optimizations to the model."""
@@ -187,18 +184,19 @@ class CSM(object):
                 )
 
         # Apply cache size configuration
-        if self._generator:
+        if self._generator is not None:
             # Patch the tokenize method with configured cache size
             original_tokenize_text = self._generator._tokenize_text_segment
 
-            @lru_cache(maxsize=self.config["cache_size"])
+            @lru_cache(maxsize=int(self.config["cache_size"]))
             def cached_tokenize_text_segment(
                 text_str: str,
                 speaker_int: int,
             ) -> Tuple[torch.Tensor, torch.Tensor]:
                 return original_tokenize_text(text_str, speaker_int)
 
-            self._generator._tokenize_text_segment = (
+            # Use a reference to the function instead of direct assignment
+            setattr(self._generator, "_tokenize_text_segment", 
                 lambda text, speaker: cached_tokenize_text_segment(text, speaker)
             )
 
@@ -231,6 +229,8 @@ class CSM(object):
 
     def load_audio(self, audio_path: str) -> torch.Tensor:
         audio_tensor, sample_rate = torchaudio.load(audio_path)
+        if self._generator is None:
+            raise RuntimeError("Generator not initialized")
         audio_tensor = torchaudio.functional.resample(
             audio_tensor.squeeze(0),
             orig_freq=sample_rate,
@@ -275,16 +275,16 @@ class CSM(object):
 
         # Use default values if not provided
         speaker_id = (
-            speaker_id if speaker_id is not None else self.config["default_speaker_id"]
+            speaker_id if speaker_id is not None else int(self.config["default_speaker_id"])
         )
         temperature = (
-            temperature if temperature is not None else self.config["temperature"]
+            temperature if temperature is not None else int(self.config["temperature"])
         )
-        topk = topk if topk is not None else self.config["topk"]
+        topk = topk if topk is not None else int(self.config["topk"])
         max_audio_length_ms = (
             max_audio_length_ms
             if max_audio_length_ms is not None
-            else self.config["max_audio_length_ms"]
+            else int(self.config["max_audio_length_ms"])
         )
         context = context if context is not None else []
 
@@ -347,16 +347,16 @@ class CSM(object):
 
         # Use default values if not provided
         speaker_id = (
-            speaker_id if speaker_id is not None else self.config["default_speaker_id"]
+            speaker_id if speaker_id is not None else int(self.config["default_speaker_id"])
         )
         temperature = (
-            temperature if temperature is not None else self.config["temperature"]
+            temperature if temperature is not None else int(self.config["temperature"])
         )
-        topk = topk if topk is not None else self.config["topk"]
+        topk = topk if topk is not None else int(self.config["topk"])
         max_audio_length_ms = (
             max_audio_length_ms
             if max_audio_length_ms is not None
-            else self.config["max_audio_length_ms"]
+            else int(self.config["max_audio_length_ms"])
         )
         context = context if context is not None else []
 
@@ -365,6 +365,8 @@ class CSM(object):
         close_writer = None
 
         if output_file:
+            if self._generator is None:
+                raise RuntimeError("Generator not initialized")
             file_writer, close_writer = stream_audio_to_wav(
                 output_file, self._generator.sample_rate
             )
@@ -373,9 +375,9 @@ class CSM(object):
             original_callback = on_chunk_generated
 
             def combined_callback(chunk: torch.Tensor) -> None:
-                if file_writer:
+                if file_writer is not None:
                     file_writer(chunk)
-                if original_callback:
+                if original_callback is not None:
                     original_callback(chunk)
 
             on_chunk_generated = combined_callback

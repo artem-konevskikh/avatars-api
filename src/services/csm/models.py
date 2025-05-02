@@ -152,7 +152,7 @@ class ModelArgs:
     audio_num_codebooks: int
 
 
-class Model(
+class Model( # type: ignore
     nn.Module,
     PyTorchModelHubMixin,
     repo_url="https://github.com/SesameAILabs/csm",
