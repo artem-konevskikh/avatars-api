@@ -11,24 +11,21 @@ from src.models.avatars import Avatar
 class CSM(object):
     def __init__(self) -> None:
         self._generator = load_csm_1b('cuda')
-        self.avatar: Avatar | None = None
         self.segments: List[Segment] = []
 
-    def load_avatar(self, avatar: Avatar) -> None:
-        assert avatar.voice is not None
-        self.avatar = avatar
+    def load_voice(self, voice_text: str, voice_path: str) -> None:
         self.segments = [
             Segment(
-                text='The Manchurian hare (Lepus mandshuricus) is a species of mammal in the family Leporidae found'
-                ' in northeastern China and Russia, the Amur River basin,'
-                ' and possibly the mountains of northern North Korea.',
+                text=voice_text,
                 speaker=0,
-                audio=self._load_audio(avatar.voice),
+                audio=self._load_audio(voice_path),
             ),
         ]
 
-    def run(self, text: str, avatar: Avatar, output_file: str) -> None:
-        self.load_avatar(avatar)
+    def run(self, text: str, output_file: str) -> None:
+        if len(self.segments) == 0:
+            raise ValueError('No voice loaded')
+
         generate_streaming_audio(
             generator=self._generator,
             text=text,
@@ -49,7 +46,6 @@ class CSM(object):
 
 
 if __name__ == '__main__':
-    csm = CSM()
     avatar = Avatar(
         id='1',
         name='artem',
@@ -57,8 +53,15 @@ if __name__ == '__main__':
         voice='/home/aicu/ai/csm-streaming/voice.wav',
         created_at=datetime.now(),
     )
+    csm = CSM()
+
+    voice_text = 'The Manchurian hare (Lepus mandshuricus) is a species of mammal '
+    'in the family Leporidae found in northeastern China and Russia, '
+    'the Amur River basin, and possibly the mountains of northern North Korea.'
+    voice_path = '/home/aicu/ai/csm-streaming/voice.wav'
+
+    csm.load_voice(voice_text, voice_path)
     csm.run(
         "Hello! My name is Artem and I'm your digital avata! Ha-ha-ha!",
-        avatar,
         'output.wav',
     )
