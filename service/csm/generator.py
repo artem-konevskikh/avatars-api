@@ -13,12 +13,13 @@ from typing import List, Optional, Tuple
 import numpy as np
 import torch
 import torchaudio
-from csm_models import Model, ModelArgs
 from huggingface_hub import hf_hub_download
 from moshi.models import loaders
 from tokenizers.processors import TemplateProcessing
 from transformers import AutoTokenizer
 from typing_extensions import OrderedDict
+
+from service.csm.csm_models import Model, ModelArgs
 
 logger = logging.getLogger(__name__)
 
@@ -73,7 +74,7 @@ class Generator:
         self._stream_buffer_size = 20
         self.max_seq_len = 2048
         self._cache = OrderedDict()  # type: ignore
-        self._text_token_cache = {}
+        self._text_token_cache = {}  # type: ignore
         torch.set_num_threads(16)
         torch.cuda.set_per_process_memory_fraction(0.95)
 
@@ -541,15 +542,6 @@ class AudioStreamWriter:
             torchaudio.save(self.filename, audio.unsqueeze(0).cpu(), self.sample_rate)
 
 
-import os
-
-import torch
-from generator import Generator
-from safetensors.torch import load_file
-
-from models import Model, ModelArgs
-
-
 def load_csm_1b_local(model_path: str, device: str = 'cuda', audio_num_codebooks: int = 32):
     """Load the CSM-1B model from a local checkpoint with extreme optimizations
     and warmup."""
@@ -661,7 +653,7 @@ def load_csm_1b(device: str = 'cuda') -> Generator:
 
     generator._stream_buffer_size = 20
 
-    generator._tokenization_cache = {}
+    generator._tokenization_cache = {}  # type: ignore
 
     from functools import lru_cache
 
@@ -672,7 +664,7 @@ def load_csm_1b(device: str = 'cuda') -> Generator:
     def cached_tokenize_text_segment(text_str, speaker_int):
         return original_tokenize_text(text_str, speaker_int)
 
-    generator._tokenize_text_segment = lambda text, speaker: cached_tokenize_text_segment(text, speaker)
+    generator._tokenize_text_segment = lambda text, speaker: cached_tokenize_text_segment(text, speaker)  # type: ignore
 
     warmup_generator(generator)
 
@@ -737,7 +729,7 @@ def generate_streaming_audio(
     write_chunk, close_wav = stream_audio_to_wav(output_file, generator.sample_rate)
 
     # Set up audio playback if requested
-    audio_queue = queue.Queue(maxsize=100) if play_audio else None
+    audio_queue = queue.Queue(maxsize=100) if play_audio else None  # type: ignore
     stop_event = threading.Event()
 
     if play_audio:
@@ -802,7 +794,7 @@ def generate_streaming_audio(
 
     # Timing metrics
     chunk_times = []
-    latency_to_first_chunk = None
+    latency_to_first_chunk: float | None = None
     total_audio_duration = 0
     chunk_count = 0
 
@@ -925,7 +917,7 @@ def generate_streaming_audio(
     print('\n' + '=' * 50)
     print('AUDIO GENERATION PERFORMANCE METRICS')
     print('=' * 50)
-    print(f'First chunk latency: {latency_to_first_chunk * 1000:.1f}ms')
+    # print(f'First chunk latency: {latency_to_first_chunk * 1000:.1f}ms')
     print(f'Total generation time: {total_elapsed:.2f}s')
     print(f'Audio duration: {total_audio_duration:.2f}s')
     print(f'Real-time factor (RTF): {rtf:.3f}x (target: <1.0)')
