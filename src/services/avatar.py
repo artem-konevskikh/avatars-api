@@ -1,5 +1,6 @@
 from datetime import datetime
 import os
+import aiofiles
 from fastapi import UploadFile
 
 from src.models.avatars import Avatar, AvatarList
@@ -31,15 +32,15 @@ class AvatarService:
         
         # Save photo file
         photo_path = os.path.join(avatar_dir, photo.filename)
-        photo_content = await photo.read()
-        with open(photo_path, "wb") as f:
-            f.write(photo_content)
+        async with aiofiles.open(photo_path, 'wb') as out_file:
+            while content := await photo.read(1024):  # async read chunk
+                await out_file.write(content)  # async write chunk
         
         # Save voice file
         voice_path = os.path.join(avatar_dir, voice.filename)
-        voice_content = await voice.read()
-        with open(voice_path, "wb") as f:
-            f.write(voice_content)
+        async with aiofiles.open(voice_path, 'wb') as out_file:
+            while content := await voice.read(1024):  # async read chunk
+                await out_file.write(content)  # async write chunk
         
         # Reset file positions for potential future reads
         await photo.seek(0)
