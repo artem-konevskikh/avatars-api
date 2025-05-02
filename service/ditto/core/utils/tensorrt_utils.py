@@ -1,10 +1,8 @@
 import ctypes
 import os
 from collections import OrderedDict
-from typing import Type
 
 import numpy as np
-import torch
 from cuda import cuda, cudart, nvrtc
 
 try:

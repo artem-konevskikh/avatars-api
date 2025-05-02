@@ -1,7 +1,6 @@
 # coding: utf-8
 """Cropping function and the related preprocess functions for cropping."""
 
-import os.path as osp
 from math import acos, cos, degrees, sin
 
 import cv2

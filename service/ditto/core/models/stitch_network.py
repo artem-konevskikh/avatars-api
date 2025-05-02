@@ -1,4 +1,3 @@
-import numpy as np
 import torch
 
 from ..utils.load_model import load_model
