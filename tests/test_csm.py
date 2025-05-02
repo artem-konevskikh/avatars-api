@@ -14,7 +14,7 @@ def test_csm_initialization() -> None:
     # Keys accessed by __init__ or methods called soon after (like setup_optimizations)
     # or potentially by logging within __init__ should be included.
     MOCK_CONFIG = {
-        'model_type': 'mock_type',  # Needed for logging in load_model, though not called by init
+        'model_type': 'CSM_1B',
         'device': device,  # Use determined device
         'local_model_path': None,
         'audio_num_codebooks': 1,  # Needed for ModelArgs in load_model
@@ -32,6 +32,11 @@ def test_csm_initialization() -> None:
         csm_instance = CSM(config=MOCK_CONFIG)  # type: ignore
     except Exception as err:
         pytest.fail(f'CSM initialization raised an unexpected exception: {err}')
+
+    try:
+        csm_instance.load_model()
+    except Exception as err:
+        pytest.fail(f'CSM model loading raised an unexpected exception: {err}')
 
     assert isinstance(csm_instance, CSM), 'Failed to create an instance of CSM.'
     assert csm_instance.config == MOCK_CONFIG, 'CSM instance did not store the config correctly.'
