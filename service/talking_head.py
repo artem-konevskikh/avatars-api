@@ -17,5 +17,5 @@ if __name__ == '__main__':
     ditto = Ditto(data_root, cfg_pkl)
 
     audio_path = 'output.wav'  # .wav
-    source_path = 'image.png'  # video|image
+    source_path = '/home/aicu/work/avatars/me_.jpg'  # video|image
     output_path = 'result.mp4'  # .mp4

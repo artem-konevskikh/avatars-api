@@ -84,7 +84,7 @@ class AvatarRegistrar:
         for rgb in rgb_list:
             info = self.source2info(rgb, last_lmk, **kwargs)
             for k in keys:
-                source_info[f"{k}_lst"].append(info[k])
+                source_info[f'{k}_lst'].append(info[k])
 
             last_lmk = info['lmk203']
 

@@ -9,3 +9,6 @@ __pycache__
 *.pth
 *.egg-info
 *.pyc
+data/weights/ditto
+data/weights/csm
+*.wav

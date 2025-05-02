@@ -28,7 +28,7 @@ def load_model(model_path: str, device: str = 'cuda', **kwargs):
         return model, 'pytorch'
 
     else:
-        raise ValueError(f"Unsupported model file type: {model_path}")
+        raise ValueError(f'Unsupported model file type: {model_path}')
 
 
 def create_model(

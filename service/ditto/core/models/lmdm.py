@@ -98,7 +98,7 @@ class LMDM:
             with torch.no_grad():
                 pred_noise, x_start = self.model(x, cond_frame, cond, time_cond)
         else:
-            raise ValueError(f"Unsupported model type: {self.model_type}")
+            raise ValueError(f'Unsupported model type: {self.model_type}')
 
         return pred_noise, x_start
 

@@ -73,7 +73,7 @@ class FaceMesh:
             for name in self.output_names:
                 outputs[name] = self.model.buffer[name][0]
         else:
-            raise ValueError(f"Unsupported model type: {self.model_type}")
+            raise ValueError(f'Unsupported model type: {self.model_type}')
         points = outputs['Identity'].reshape(1434 // 3, 3)
         points = self.project_landmarks(points, roi)
         return points

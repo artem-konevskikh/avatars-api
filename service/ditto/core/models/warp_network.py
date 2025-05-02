@@ -36,6 +36,6 @@ class WarpNetwork:
                     .numpy()
                 )
         else:
-            raise ValueError(f"Unsupported model type: {self.model_type}")
+            raise ValueError(f'Unsupported model type: {self.model_type}')
 
         return pred

@@ -27,7 +27,7 @@ class Wav2Feat:
             self.feat_dim = 1024
             self.support_streaming = True
         else:
-            raise ValueError(f"Unsupported w2f_type: {w2f_type}")
+            raise ValueError(f'Unsupported w2f_type: {w2f_type}')
 
     def __call__(
         self,
@@ -41,7 +41,7 @@ class Wav2Feat:
         elif self.w2f_type == 's2g':
             feat = self.w2f(audio, sr=sr, norm_mean_std=norm_mean_std)
         else:
-            raise ValueError(f"Unsupported w2f_type: {self.w2f_type}")
+            raise ValueError(f'Unsupported w2f_type: {self.w2f_type}')
         return feat
 
     def wav2feat(
@@ -57,7 +57,7 @@ class Wav2Feat:
         elif self.w2f_type == 's2g':
             feat = self.w2f(audio, sr=sr, norm_mean_std=norm_mean_std)
         else:
-            raise ValueError(f"Unsupported w2f_type: {self.w2f_type}")
+            raise ValueError(f'Unsupported w2f_type: {self.w2f_type}')
         return feat
 
 

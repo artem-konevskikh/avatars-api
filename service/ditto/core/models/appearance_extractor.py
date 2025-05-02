@@ -26,5 +26,5 @@ class AppearanceExtractor:
             with torch.no_grad(), torch.autocast(device_type=self.device[:4], dtype=torch.float16, enabled=True):
                 pred = self.model(torch.from_numpy(image).to(self.device)).float().cpu().numpy()
         else:
-            raise ValueError(f"Unsupported model type: {self.model_type}")
+            raise ValueError(f'Unsupported model type: {self.model_type}')
         return pred

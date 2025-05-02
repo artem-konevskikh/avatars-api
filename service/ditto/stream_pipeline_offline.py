@@ -209,7 +209,7 @@ class StreamSDK:
         if self.online_mode:
             # buffer: seq_frames - valid_clip_len
             self.audio_feat = self.wav2feat.wav2feat(np.zeros((self.overlap_v2 * 640,), dtype=np.float32), sr=16000)
-            assert len(self.audio_feat) == self.overlap_v2, f"{len(self.audio_feat)}"
+            assert len(self.audio_feat) == self.overlap_v2, f'{len(self.audio_feat)}'
         else:
             self.audio_feat = np.zeros((0, self.wav2feat.feat_dim), dtype=np.float32)
         self.cond_idx_start = 0 - len(self.audio_feat)

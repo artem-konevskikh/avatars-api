@@ -42,7 +42,7 @@ class MotionExtractor:
                 for i, name in enumerate(self.output_names):
                     outputs[name] = pred[i].float().cpu().numpy()
         else:
-            raise ValueError(f"Unsupported model type: {self.model_type}")
+            raise ValueError(f'Unsupported model type: {self.model_type}')
         outputs['exp'] = outputs['exp'].reshape(1, -1)
         outputs['kp'] = outputs['kp'].reshape(1, -1)
         return outputs

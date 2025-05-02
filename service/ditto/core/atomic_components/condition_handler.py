@@ -99,7 +99,7 @@ class ConditionHandler:
             # emo label list, e.g. [[4], [3,4], [3],[3,4,5], ...]
             emo_seq = np.stack([_get_emo_avg(i) for i in emo], 0)  # [m, 8]
         else:
-            raise ValueError(f"Unsupported emo type: {emo}")
+            raise ValueError(f'Unsupported emo type: {emo}')
 
         if seq_len > 0:
             if len(emo_seq) == seq_len:
@@ -109,7 +109,7 @@ class ConditionHandler:
             elif len(emo_seq) > seq_len:
                 return emo_seq[:seq_len]
             else:
-                raise ValueError(f"emo len {len(emo_seq)} can not match seq len ({seq_len})")
+                raise ValueError(f'emo len {len(emo_seq)} can not match seq len ({seq_len})')
         else:
             return emo_seq
 

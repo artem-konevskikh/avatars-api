@@ -101,7 +101,7 @@ class InsightFaceDet:
             self.model.infer()
             net_outs = [self.model.buffer[name][0] for name in self.output_names]
         else:
-            raise ValueError(f"Unsupported model type: {self.model_type}")
+            raise ValueError(f'Unsupported model type: {self.model_type}')
         return net_outs
 
     def _forward(self, img, threshold):

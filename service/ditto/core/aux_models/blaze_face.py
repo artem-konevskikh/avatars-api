@@ -110,7 +110,7 @@ class BlazeFace:
             for name in self.output_names:
                 outputs[name] = self.model.buffer[name][0]
         else:
-            raise ValueError(f"Unsupported model type: {self.model_type}")
+            raise ValueError(f'Unsupported model type: {self.model_type}')
         boxes = self.postprocess(outputs['regressors'], outputs['classificators'])
         return boxes
 

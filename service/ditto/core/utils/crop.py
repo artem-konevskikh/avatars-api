@@ -177,7 +177,7 @@ def parse_pt2_from_pt_x(pts, use_lip=True):
     elif pts.shape[0] == 9:
         pt2 = parse_pt2_from_pt9(pts, use_lip=use_lip)
     else:
-        raise Exception(f"Unknow shape: {pts.shape}")
+        raise Exception(f'Unknow shape: {pts.shape}')
 
     if not use_lip:
         # NOTE: to compile with the latter code, need to rotate the pt2 90 degrees clockwise manually
@@ -281,7 +281,7 @@ def parse_bbox_from_landmark(pts, **kwargs):
 def crop_image_by_bbox(img, bbox, lmk=None, dsize=512, angle=None, flag_rot=False, **kwargs):
     left, top, right, bot = bbox
     if int(right - left) != int(bot - top):
-        print(f"right-left {right-left} != bot-top {bot-top}")
+        print(f'right-left {right-left} != bot-top {bot-top}')
     size = right - left
 
     src_center = np.array([(left + right) / 2, (top + bot) / 2], dtype=DTYPE)

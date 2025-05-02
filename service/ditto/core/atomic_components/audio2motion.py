@@ -55,7 +55,7 @@ def _cvt_LP_motion_info(inp, mode, ignore_keys=()):
         assert isinstance(inp, dict)
         return _dic2arr(inp)  # (dim)
     elif mode == 'arr2dic':
-        assert inp.shape[0] >= 265, f"{inp.shape}"
+        assert inp.shape[0] >= 265, f'{inp.shape}'
         return _arr2dic(inp)  # {k: (1, dim)}
     else:
         raise ValueError()

@@ -18,7 +18,7 @@ class HubertStreaming:
             self.model.infer()
             output = self.model.buffer['encoding_out'][0]
         else:
-            raise ValueError(f"Unsupported model type: {self.model_type}")
+            raise ValueError(f'Unsupported model type: {self.model_type}')
         return output
 
     def __call__(self, audio_chunk):

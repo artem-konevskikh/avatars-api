@@ -32,7 +32,7 @@ class Landmark203:
             self.model.infer()
             out_pts = self.model.buffer[self.output_names[0]][0]
         else:
-            raise ValueError(f"Unsupported model type: {self.model_type}")
+            raise ValueError(f'Unsupported model type: {self.model_type}')
         return out_pts
 
     def run(self, img_crop_rgb, M_c2o=None):

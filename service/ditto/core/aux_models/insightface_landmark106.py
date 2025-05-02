@@ -63,7 +63,7 @@ class Landmark106:
             self.model.infer()
             pred = self.model.buffer[self.output_names[0]][0]
         else:
-            raise ValueError(f"Unsupported model type: {self.model_type}")
+            raise ValueError(f'Unsupported model type: {self.model_type}')
         return pred
 
     def get(self, img, bbox):
